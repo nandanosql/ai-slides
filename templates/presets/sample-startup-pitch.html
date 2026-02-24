@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-Powered Workspace Revolution - Startup Pitch Deck">
+    <title>WorkflowAI - Investor Pitch</title>
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: var(--font-primary);
+            color: var(--text);
+            background: var(--background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== THEME: AI STARTUP ===== */
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --background: #ffffff;
+            --surface: #fafafa;
+            --text: #171717;
+            --text-muted: #737373;
+            --border: #e5e5e5;
+            --gradient-start: #6366f1;
+            --gradient-end: #ec4899;
+
+            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            --font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.375rem;
+            --text-2xl: 1.75rem;
+            --text-3xl: 2.25rem;
+            --text-4xl: 3rem;
+            --text-5xl: 4rem;
+            --text-6xl: 5rem;
+
+            --spacing-unit: 8px;
+            --slide-padding: 80px;
+            --content-max-width: 1100px;
+
+            --transition-speed: 0.4s;
+            --animation-easing: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ===== PRESENTATION CONTAINER ===== */
+        #presentation {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== SLIDE STYLES ===== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform var(--transition-speed) var(--animation-easing),
+                        opacity var(--transition-speed) var(--animation-easing);
+            will-change: transform, opacity;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+            z-index: 1;
+        }
+
+        .slide-content {
+            max-width: var(--content-max-width);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        h1 { font-size: var(--text-6xl); }
+        h2 { font-size: var(--text-5xl); }
+        h3 { font-size: var(--text-4xl); }
+
+        p {
+            font-size: var(--text-xl);
+            line-height: 1.6;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            color: var(--text-muted);
+        }
+
+        ul {
+            list-style: none;
+            margin: calc(var(--spacing-unit) * 4) 0;
+        }
+
+        li {
+            font-size: var(--text-2xl);
+            line-height: 1.6;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            padding-left: calc(var(--spacing-unit) * 5);
+            position: relative;
+        }
+
+        li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* ===== GRADIENT TEXT ===== */
+        .gradient-text {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== SLIDE TYPES ===== */
+        .slide-title {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+        }
+
+        .slide-title h1 {
+            font-size: var(--text-6xl);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .slide-title .subtitle {
+            font-size: var(--text-2xl);
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .slide-stats {
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: calc(var(--spacing-unit) * 8);
+            margin-top: calc(var(--spacing-unit) * 6);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: calc(var(--spacing-unit) * 4);
+            background: var(--surface);
+            border-radius: 16px;
+        }
+
+        .stat-number {
+            font-size: var(--text-6xl);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .stat-label {
+            font-size: var(--text-xl);
+            color: var(--text-muted);
+        }
+
+        .slide-two-column .slide-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--spacing-unit) * 8);
+            align-items: center;
+        }
+
+        .column {
+            padding: calc(var(--spacing-unit) * 4);
+        }
+
+        .column h3 {
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        .slide-quote {
+            text-align: center;
+        }
+
+        .slide-quote blockquote {
+            font-size: var(--text-4xl);
+            font-style: italic;
+            line-height: 1.4;
+            margin: 0;
+            position: relative;
+        }
+
+        .slide-quote blockquote::before {
+            content: """;
+            font-size: 6rem;
+            color: var(--primary);
+            opacity: 0.3;
+            position: absolute;
+            top: -40px;
+            left: -20px;
+        }
+
+        .slide-quote cite {
+            display: block;
+            margin-top: calc(var(--spacing-unit) * 4);
+            font-size: var(--text-xl);
+            color: var(--text-muted);
+            font-style: normal;
+        }
+
+        .slide-cta {
+            text-align: center;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 20px 60px;
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 50px;
+            text-decoration: none;
+            margin-top: calc(var(--spacing-unit) * 4);
+            transition: transform 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        .timeline {
+            margin-top: calc(var(--spacing-unit) * 6);
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: calc(var(--spacing-unit) * 4);
+            padding: calc(var(--spacing-unit) * 3);
+            background: var(--surface);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .timeline-date {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 120px;
+        }
+
+        .timeline-content {
+            font-size: var(--text-xl);
+            color: var(--text);
+        }
+
+        /* ===== PROGRESS & CONTROLS ===== */
+        #progress {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+
+        #slide-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            background: var(--surface);
+            padding: 8px 16px;
+            border-radius: 20px;
+            z-index: 100;
+        }
+
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .control-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: var(--text-sm);
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.6s var(--animation-easing) forwards;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            :root {
+                --text-6xl: 3rem;
+                --text-5xl: 2.5rem;
+                --text-4xl: 2rem;
+                --text-3xl: 1.5rem;
+                --text-2xl: 1.25rem;
+                --slide-padding: 40px;
+            }
+
+            .slide-two-column .slide-content,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .notes { display: none; }
+    </style>
+</head>
+<body>
+    <div id="presentation" role="main" aria-label="Presentation">
+
+        <!-- Slide 1: Title -->
+        <div class="slide slide-title active">
+            <div class="slide-content">
+                <h1 class="gradient-text">WorkflowAI</h1>
+                <p class="subtitle">Revolutionizing Team Collaboration with AI</p>
+                <div class="notes">Welcome everyone. Today I'm excited to share how WorkflowAI is transforming how teams work together.</div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Problem -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>The Challenge</h2>
+                <p>Remote teams face critical productivity barriers</p>
+                <ul>
+                    <li>Coordination overhead wastes 40% of work time</li>
+                    <li>Information silos reduce team effectiveness</li>
+                    <li>Context switching kills deep work</li>
+                    <li>Traditional tools don't integrate seamlessly</li>
+                </ul>
+                <div class="notes">The problem is clear: remote work has created new challenges that existing tools weren't designed to solve.</div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Solution -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Meet <span class="gradient-text">WorkflowAI</span></h2>
+                <p>The AI-powered workspace that thinks with your team</p>
+                <ul>
+                    <li>Unified workspace with intelligent AI assistance</li>
+                    <li>Automatic task prioritization and routing</li>
+                    <li>Smart context preservation across tools</li>
+                    <li>Seamless integration with existing workflows</li>
+                </ul>
+                <div class="notes">WorkflowAI uses advanced AI to understand your team's work patterns and optimize collaboration automatically.</div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Stats -->
+        <div class="slide slide-stats">
+            <div class="slide-content">
+                <h2>Impact in Numbers</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">40%</div>
+                        <div class="stat-label">Productivity Increase</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">10K+</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Satisfaction Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">$2M</div>
+                        <div class="stat-label">Annual Recurring Revenue</div>
+                    </div>
+                </div>
+                <div class="notes">Our early traction validates the market need. Teams see immediate productivity gains.</div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Timeline -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Our Journey</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q1 2025</div>
+                        <div class="timeline-content">Beta launch with 100 design partners</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q2 2025</div>
+                        <div class="timeline-content">Reached 1,000 paying customers</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q3 2025</div>
+                        <div class="timeline-content">Closed $5M Series A funding</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Q4 2025</div>
+                        <div class="timeline-content">Launched enterprise features</div>
+                    </div>
+                </div>
+                <div class="notes">We've achieved significant milestones in just one year, demonstrating strong product-market fit.</div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Before/After -->
+        <div class="slide slide-two-column">
+            <div class="slide-content">
+                <div class="column">
+                    <h3>Before WorkflowAI</h3>
+                    <ul>
+                        <li>Manual task coordination</li>
+                        <li>Scattered across 10+ tools</li>
+                        <li>Lost context between switches</li>
+                        <li>Constant status update meetings</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>After WorkflowAI</h3>
+                    <ul>
+                        <li>AI-powered automation</li>
+                        <li>Unified workspace</li>
+                        <li>Preserved context everywhere</li>
+                        <li>Async-first collaboration</li>
+                    </ul>
+                </div>
+                <div class="notes">The transformation is dramatic. Teams move from reactive coordination to proactive collaboration.</div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Testimonial -->
+        <div class="slide slide-quote">
+            <div class="slide-content">
+                <blockquote>
+                    WorkflowAI transformed how our team operates. We're 2x more productive and actually enjoy working together again.
+                </blockquote>
+                <cite>— Sarah Chen, CTO at TechCorp</cite>
+                <div class="notes">Our customers love the product. This testimonial is from a 200-person engineering team.</div>
+            </div>
+        </div>
+
+        <!-- Slide 8: CTA -->
+        <div class="slide slide-cta">
+            <div class="slide-content">
+                <h2>Join the Revolution</h2>
+                <p>We're raising $15M Series B to scale globally</p>
+                <a href="mailto:invest@workflowai.com" class="cta-button">Let's Talk</a>
+                <p style="margin-top: 40px; font-size: var(--text-lg);">hello@workflowai.com</p>
+                <div class="notes">We're looking for partners who share our vision of transforming how teams collaborate. Thank you.</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div id="slide-counter" aria-live="polite"></div>
+
+    <div id="controls">
+        <button class="control-btn" id="fullscreen-toggle" aria-label="Toggle fullscreen">⛶ Fullscreen</button>
+    </div>
+
+    <script>
+        const state = { currentSlide: 0, totalSlides: 0, touchStartX: 0, touchEndX: 0 };
+
+        function init() {
+            const slides = document.querySelectorAll('.slide');
+            state.totalSlides = slides.length;
+            if (state.totalSlides > 0) showSlide(0);
+            updateCounter();
+            updateProgress();
+            attachEventListeners();
+        }
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.slide');
+            if (index < 0 || index >= state.totalSlides) return;
+
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'prev');
+                if (i === index) {
+                    slide.classList.add('active');
+                    animateSlideContent(slide);
+                } else if (i < index) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            state.currentSlide = index;
+            updateCounter();
+            updateProgress();
+        }
+
+        function nextSlide() {
+            if (state.currentSlide < state.totalSlides - 1) showSlide(state.currentSlide + 1);
+        }
+
+        function prevSlide() {
+            if (state.currentSlide > 0) showSlide(state.currentSlide - 1);
+        }
+
+        function animateSlideContent(slide) {
+            const elements = slide.querySelectorAll('h1, h2, h3, p, li, .stat-item, .timeline-item');
+            elements.forEach((el, i) => {
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.classList.add('animate-in');
+                    el.style.opacity = '1';
+                }, i * 100);
+            });
+        }
+
+        function updateCounter() {
+            document.getElementById('slide-counter').textContent = `${state.currentSlide + 1} / ${state.totalSlides}`;
+        }
+
+        function updateProgress() {
+            const progress = document.getElementById('progress');
+            const percentage = ((state.currentSlide + 1) / state.totalSlides) * 100;
+            progress.style.width = `${percentage}%`;
+            progress.setAttribute('aria-valuenow', percentage);
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function attachEventListeners() {
+            document.addEventListener('keydown', (e) => {
+                switch(e.key) {
+                    case 'ArrowRight':
+                    case ' ':
+                        e.preventDefault();
+                        nextSlide();
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        prevSlide();
+                        break;
+                    case 'f':
+                    case 'F':
+                        toggleFullscreen();
+                        break;
+                }
+            });
+
+            document.addEventListener('touchstart', (e) => {
+                state.touchStartX = e.changedTouches[0].screenX;
+            });
+
+            document.addEventListener('touchend', (e) => {
+                state.touchEndX = e.changedTouches[0].screenX;
+                const diff = state.touchStartX - state.touchEndX;
+                if (Math.abs(diff) > 50) {
+                    diff > 0 ? nextSlide() : prevSlide();
+                }
+            });
+
+            document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

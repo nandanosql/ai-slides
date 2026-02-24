@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-Generated Presentation">
+    <title>{{PRESENTATION_TITLE}}</title>
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: var(--font-primary);
+            color: var(--text);
+            background: var(--background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== THEME: MINIMAL CORPORATE (DEFAULT) ===== */
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --accent: #0ea5e9;
+            --background: #ffffff;
+            --surface: #f8fafc;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+
+            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            --font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'SF Mono', 'Monaco', 'Consolas', monospace;
+
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            --text-3xl: 1.875rem;
+            --text-4xl: 2.25rem;
+            --text-5xl: 3rem;
+            --text-6xl: 3.75rem;
+
+            --spacing-unit: 8px;
+            --slide-padding: 80px;
+            --content-max-width: 1200px;
+
+            --transition-speed: 0.3s;
+            --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== THEME: APPLE KEYNOTE ===== */
+        :root[data-theme="apple-keynote"] {
+            --primary: #000000;
+            --secondary: #86868b;
+            --accent: #0071e3;
+            --background: #ffffff;
+            --surface: #f5f5f7;
+            --text: #1d1d1f;
+            --text-muted: #86868b;
+            --border: #d2d2d7;
+            --slide-padding: 100px;
+            --text-6xl: 6rem;
+            --transition-speed: 0.4s;
+            --animation-easing: cubic-bezier(0.28, 0.11, 0.32, 1);
+        }
+
+        /* ===== THEME: DARK FUTURISTIC ===== */
+        :root[data-theme="dark-futuristic"] {
+            --primary: #8b5cf6;
+            --secondary: #6366f1;
+            --accent: #06b6d4;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --glow: rgba(139, 92, 246, 0.5);
+        }
+
+        /* ===== THEME: AI STARTUP ===== */
+        :root[data-theme="ai-startup"] {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --background: #ffffff;
+            --surface: #fafafa;
+            --text: #171717;
+            --text-muted: #737373;
+            --border: #e5e5e5;
+            --gradient-start: #6366f1;
+            --gradient-end: #ec4899;
+        }
+
+        /* ===== THEME: DATA STORYTELLING ===== */
+        :root[data-theme="data-storytelling"] {
+            --primary: #0891b2;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --background: #ffffff;
+            --surface: #f0f9ff;
+            --text: #0c4a6e;
+            --text-muted: #0369a1;
+            --border: #bae6fd;
+        }
+
+        /* ===== PRESENTATION CONTAINER ===== */
+        #presentation {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== SLIDE STYLES ===== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform var(--transition-speed) var(--animation-easing),
+                        opacity var(--transition-speed) var(--animation-easing);
+            will-change: transform, opacity;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+            z-index: 1;
+        }
+
+        /* ===== SLIDE CONTENT CONTAINER ===== */
+        .slide-content {
+            max-width: var(--content-max-width);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        h1 { font-size: var(--text-6xl); }
+        h2 { font-size: var(--text-5xl); }
+        h3 { font-size: var(--text-4xl); }
+        h4 { font-size: var(--text-3xl); }
+
+        p {
+            font-size: var(--text-xl);
+            line-height: 1.6;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            color: var(--text-muted);
+        }
+
+        /* ===== LISTS ===== */
+        ul, ol {
+            list-style: none;
+            margin: calc(var(--spacing-unit) * 4) 0;
+        }
+
+        li {
+            font-size: var(--text-2xl);
+            line-height: 1.6;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            padding-left: calc(var(--spacing-unit) * 5);
+            position: relative;
+        }
+
+        li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* ===== SLIDE TYPES ===== */
+
+        /* Title Slide */
+        .slide-title {
+            text-align: center;
+        }
+
+        .slide-title h1 {
+            font-size: var(--text-6xl);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .slide-title .subtitle {
+            font-size: var(--text-2xl);
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Quote Slide */
+        .slide-quote {
+            text-align: center;
+        }
+
+        .slide-quote blockquote {
+            font-size: var(--text-4xl);
+            font-style: italic;
+            line-height: 1.4;
+            margin: 0;
+            position: relative;
+        }
+
+        .slide-quote blockquote::before {
+            content: """;
+            font-size: 6rem;
+            color: var(--primary);
+            opacity: 0.3;
+            position: absolute;
+            top: -40px;
+            left: -20px;
+        }
+
+        .slide-quote cite {
+            display: block;
+            margin-top: calc(var(--spacing-unit) * 4);
+            font-size: var(--text-xl);
+            color: var(--text-muted);
+            font-style: normal;
+        }
+
+        /* Stats Slide */
+        .slide-stats {
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: calc(var(--spacing-unit) * 6);
+            margin-top: calc(var(--spacing-unit) * 6);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: var(--text-6xl);
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .stat-label {
+            font-size: var(--text-xl);
+            color: var(--text-muted);
+        }
+
+        /* Two Column Slide */
+        .slide-two-column .slide-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--spacing-unit) * 8);
+            align-items: center;
+        }
+
+        /* Section Divider */
+        .slide-divider {
+            background: var(--primary);
+            color: white;
+        }
+
+        .slide-divider h2 {
+            font-size: var(--text-6xl);
+            text-align: center;
+            color: white;
+        }
+
+        /* ===== PROGRESS INDICATOR ===== */
+        #progress {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+
+        /* ===== SLIDE COUNTER ===== */
+        #slide-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            background: var(--surface);
+            padding: 8px 16px;
+            border-radius: 20px;
+            z-index: 100;
+        }
+
+        /* ===== CONTROLS ===== */
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .control-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: var(--text-sm);
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ===== SPEAKER NOTES ===== */
+        #speaker-notes {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border-top: 2px solid var(--border);
+            padding: 20px;
+            max-height: 30vh;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.3s var(--animation-easing);
+            z-index: 99;
+        }
+
+        #speaker-notes.visible {
+            transform: translateY(0);
+        }
+
+        #speaker-notes h4 {
+            font-size: var(--text-lg);
+            margin-bottom: 12px;
+        }
+
+        #speaker-notes p {
+            font-size: var(--text-base);
+            line-height: 1.6;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes countUp {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.6s var(--animation-easing) forwards;
+        }
+
+        .animate-slide {
+            animation: slideInRight 0.6s var(--animation-easing) forwards;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            :root {
+                --text-6xl: 3rem;
+                --text-5xl: 2.5rem;
+                --text-4xl: 2rem;
+                --text-3xl: 1.5rem;
+                --text-2xl: 1.25rem;
+                --slide-padding: 40px;
+            }
+
+            .slide-two-column .slide-content {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #controls {
+                bottom: 10px;
+                left: 10px;
+            }
+
+            #slide-counter {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+
+        /* ===== ACCESSIBILITY ===== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        *:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            .slide {
+                position: relative;
+                opacity: 1 !important;
+                transform: none !important;
+                page-break-after: always;
+            }
+
+            #progress, #slide-counter, #controls, #speaker-notes {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="presentation" role="main" aria-label="Presentation">
+        {{SLIDES_CONTENT}}
+    </div>
+
+    <div id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div id="slide-counter" aria-live="polite"></div>
+
+    <div id="controls">
+        <button class="control-btn" id="theme-toggle" aria-label="Toggle theme">🎨 Theme</button>
+        <button class="control-btn" id="fullscreen-toggle" aria-label="Toggle fullscreen">⛶ Fullscreen</button>
+        <button class="control-btn" id="notes-toggle" aria-label="Toggle speaker notes">📝 Notes</button>
+    </div>
+
+    <div id="speaker-notes" role="complementary" aria-label="Speaker notes">
+        <h4>Speaker Notes</h4>
+        <p id="notes-content">No notes for this slide.</p>
+    </div>
+
+    <script>
+        // ===== PRESENTATION STATE =====
+        const state = {
+            currentSlide: 0,
+            totalSlides: 0,
+            themes: ['minimal-corporate', 'apple-keynote', 'dark-futuristic', 'ai-startup', 'data-storytelling'],
+            currentTheme: 0,
+            notesVisible: false,
+            touchStartX: 0,
+            touchEndX: 0
+        };
+
+        // ===== INITIALIZATION =====
+        function init() {
+            const slides = document.querySelectorAll('.slide');
+            state.totalSlides = slides.length;
+
+            if (state.totalSlides > 0) {
+                showSlide(0);
+            }
+
+            updateCounter();
+            updateProgress();
+            attachEventListeners();
+        }
+
+        // ===== SLIDE NAVIGATION =====
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.slide');
+
+            if (index < 0 || index >= state.totalSlides) return;
+
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'prev');
+
+                if (i === index) {
+                    slide.classList.add('active');
+                    animateSlideContent(slide);
+                } else if (i < index) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            state.currentSlide = index;
+            updateCounter();
+            updateProgress();
+            updateNotes();
+        }
+
+        function nextSlide() {
+            if (state.currentSlide < state.totalSlides - 1) {
+                showSlide(state.currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (state.currentSlide > 0) {
+                showSlide(state.currentSlide - 1);
+            }
+        }
+
+        function firstSlide() {
+            showSlide(0);
+        }
+
+        function lastSlide() {
+            showSlide(state.totalSlides - 1);
+        }
+
+        // ===== ANIMATIONS =====
+        function animateSlideContent(slide) {
+            const elements = slide.querySelectorAll('h1, h2, h3, p, li, .stat-item');
+            elements.forEach((el, i) => {
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.classList.add('animate-in');
+                    el.style.opacity = '1';
+                }, i * 100);
+            });
+        }
+
+        // ===== UI UPDATES =====
+        function updateCounter() {
+            const counter = document.getElementById('slide-counter');
+            counter.textContent = `${state.currentSlide + 1} / ${state.totalSlides}`;
+        }
+
+        function updateProgress() {
+            const progress = document.getElementById('progress');
+            const percentage = ((state.currentSlide + 1) / state.totalSlides) * 100;
+            progress.style.width = `${percentage}%`;
+            progress.setAttribute('aria-valuenow', percentage);
+        }
+
+        function updateNotes() {
+            const slides = document.querySelectorAll('.slide');
+            const currentSlide = slides[state.currentSlide];
+            const notesElement = currentSlide.querySelector('.notes');
+            const notesContent = document.getElementById('notes-content');
+
+            if (notesElement) {
+                notesContent.textContent = notesElement.textContent;
+            } else {
+                notesContent.textContent = 'No notes for this slide.';
+            }
+        }
+
+        // ===== THEME SWITCHING =====
+        function toggleTheme() {
+            state.currentTheme = (state.currentTheme + 1) % state.themes.length;
+            const theme = state.themes[state.currentTheme];
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        // ===== FULLSCREEN =====
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // ===== SPEAKER NOTES =====
+        function toggleNotes() {
+            state.notesVisible = !state.notesVisible;
+            const notes = document.getElementById('speaker-notes');
+            notes.classList.toggle('visible', state.notesVisible);
+        }
+
+        // ===== EVENT LISTENERS =====
+        function attachEventListeners() {
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                switch(e.key) {
+                    case 'ArrowRight':
+                    case ' ':
+                        e.preventDefault();
+                        nextSlide();
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        prevSlide();
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        firstSlide();
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        lastSlide();
+                        break;
+                    case 'f':
+                    case 'F':
+                        toggleFullscreen();
+                        break;
+                    case 's':
+                    case 'S':
+                        toggleNotes();
+                        break;
+                    case 't':
+                    case 'T':
+                        toggleTheme();
+                        break;
+                    case 'Escape':
+                        if (document.fullscreenElement) {
+                            document.exitFullscreen();
+                        }
+                        break;
+                }
+            });
+
+            // Touch gestures
+            document.addEventListener('touchstart', (e) => {
+                state.touchStartX = e.changedTouches[0].screenX;
+            });
+
+            document.addEventListener('touchend', (e) => {
+                state.touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+
+            // Control buttons
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+            document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
+            document.getElementById('notes-toggle').addEventListener('click', toggleNotes);
+        }
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = state.touchStartX - state.touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+        }
+
+        // ===== START PRESENTATION =====
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

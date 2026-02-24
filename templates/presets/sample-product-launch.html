@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ProMax Studio - Product Launch Keynote">
+    <title>ProMax Studio - Product Launch</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: var(--font-primary);
+            color: var(--text);
+            background: var(--background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== APPLE KEYNOTE THEME ===== */
+        :root {
+            --primary: #000000;
+            --secondary: #86868b;
+            --accent: #0071e3;
+            --background: #ffffff;
+            --surface: #f5f5f7;
+            --text: #1d1d1f;
+            --text-muted: #86868b;
+            --border: #d2d2d7;
+
+            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+            --text-xs: 0.875rem;
+            --text-sm: 1rem;
+            --text-base: 1.125rem;
+            --text-lg: 1.25rem;
+            --text-xl: 1.5rem;
+            --text-2xl: 2rem;
+            --text-3xl: 2.5rem;
+            --text-4xl: 3.5rem;
+            --text-5xl: 4.5rem;
+            --text-6xl: 6rem;
+
+            --spacing-unit: 8px;
+            --slide-padding: 100px;
+            --content-max-width: 1400px;
+
+            --transition-speed: 0.4s;
+            --animation-easing: cubic-bezier(0.28, 0.11, 0.32, 1);
+        }
+
+        #presentation {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform var(--transition-speed) var(--animation-easing),
+                        opacity var(--transition-speed) var(--animation-easing);
+            will-change: transform, opacity;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+            z-index: 1;
+        }
+
+        .slide-content {
+            max-width: var(--content-max-width);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        h1 { font-size: var(--text-6xl); }
+        h2 { font-size: var(--text-5xl); }
+        h3 { font-size: var(--text-4xl); }
+
+        p {
+            font-size: var(--text-xl);
+            line-height: 1.5;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            color: var(--text-muted);
+        }
+
+        ul {
+            list-style: none;
+            margin: calc(var(--spacing-unit) * 4) 0;
+        }
+
+        li {
+            font-size: var(--text-2xl);
+            line-height: 1.5;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            padding-left: calc(var(--spacing-unit) * 5);
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: var(--text-3xl);
+        }
+
+        /* ===== SLIDE TYPES ===== */
+        .slide-title {
+            text-align: center;
+        }
+
+        .slide-title h1 {
+            font-size: var(--text-6xl);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            font-weight: 700;
+        }
+
+        .slide-title .subtitle {
+            font-size: var(--text-2xl);
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .slide-hero {
+            text-align: center;
+        }
+
+        .slide-hero h2 {
+            font-size: var(--text-5xl);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        .hero-number {
+            font-size: 12rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--primary);
+            margin: calc(var(--spacing-unit) * 6) 0;
+        }
+
+        .slide-features {
+            text-align: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: calc(var(--spacing-unit) * 8);
+            margin-top: calc(var(--spacing-unit) * 8);
+        }
+
+        .feature-item {
+            text-align: left;
+            padding: calc(var(--spacing-unit) * 4);
+        }
+
+        .feature-item h3 {
+            font-size: var(--text-3xl);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .feature-item p {
+            font-size: var(--text-lg);
+        }
+
+        .slide-stats {
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: calc(var(--spacing-unit) * 8);
+            margin-top: calc(var(--spacing-unit) * 8);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: var(--text-6xl);
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .stat-label {
+            font-size: var(--text-xl);
+            color: var(--text-muted);
+        }
+
+        .slide-pricing {
+            text-align: center;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: calc(var(--spacing-unit) * 6);
+            margin-top: calc(var(--spacing-unit) * 6);
+        }
+
+        .pricing-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: calc(var(--spacing-unit) * 6);
+            text-align: center;
+        }
+
+        .pricing-card h3 {
+            font-size: var(--text-3xl);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .pricing-card .price {
+            font-size: var(--text-5xl);
+            font-weight: 700;
+            color: var(--primary);
+            margin: calc(var(--spacing-unit) * 3) 0;
+        }
+
+        .pricing-card ul {
+            text-align: left;
+            margin-top: calc(var(--spacing-unit) * 4);
+        }
+
+        .pricing-card li {
+            font-size: var(--text-base);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .slide-cta {
+            text-align: center;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 24px 80px;
+            font-size: var(--text-2xl);
+            font-weight: 600;
+            color: white;
+            background: var(--accent);
+            border-radius: 50px;
+            text-decoration: none;
+            margin-top: calc(var(--spacing-unit) * 6);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            background: #0077ed;
+        }
+
+        /* ===== PROGRESS & CONTROLS ===== */
+        #progress {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+
+        #slide-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            background: var(--surface);
+            padding: 8px 16px;
+            border-radius: 20px;
+            z-index: 100;
+        }
+
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .control-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: var(--text-sm);
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.8s var(--animation-easing) forwards;
+        }
+
+        .animate-scale {
+            animation: scaleIn 0.8s var(--animation-easing) forwards;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            :root {
+                --text-6xl: 3rem;
+                --text-5xl: 2.5rem;
+                --text-4xl: 2rem;
+                --text-3xl: 1.5rem;
+                --text-2xl: 1.25rem;
+                --slide-padding: 40px;
+            }
+
+            .features-grid,
+            .stats-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-number {
+                font-size: 6rem;
+            }
+        }
+
+        .notes { display: none; }
+    </style>
+</head>
+<body>
+    <div id="presentation" role="main" aria-label="Presentation">
+
+        <!-- Slide 1: Title -->
+        <div class="slide slide-title active">
+            <div class="slide-content">
+                <h1>One More Thing</h1>
+                <p class="subtitle">Introducing ProMax Studio</p>
+                <div class="notes">Good morning. We have one more thing to share with you today.</div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Hero Feature -->
+        <div class="slide slide-hero">
+            <div class="slide-content">
+                <h2>Blazingly Fast</h2>
+                <div class="hero-number">10×</div>
+                <p style="font-size: var(--text-3xl); color: var(--text);">Faster rendering. Zero compromise.</p>
+                <div class="notes">ProMax Studio is 10 times faster than anything else on the market. And we didn't sacrifice quality to get there.</div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Features -->
+        <div class="slide slide-features">
+            <div class="slide-content">
+                <h2>Designed for Professionals</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <h3>Real-time Collaboration</h3>
+                        <p>Work together seamlessly with your team, anywhere in the world</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>AI-Powered Editing</h3>
+                        <p>Intelligent suggestions that speed up your creative workflow</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>Cloud Rendering</h3>
+                        <p>Offload heavy processing to the cloud, keep working locally</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>Cross-Platform Sync</h3>
+                        <p>Start on desktop, continue on tablet, finish on mobile</p>
+                    </div>
+                </div>
+                <div class="notes">We built ProMax Studio with professional creators in mind. Every feature is designed to save you time.</div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Performance Stats -->
+        <div class="slide slide-stats">
+            <div class="slide-content">
+                <h2>Performance That Matters</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">2 min</div>
+                        <div class="stat-label">4K Rendering Time</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Uptime Guarantee</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50GB</div>
+                        <div class="stat-label">Cloud Storage</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Unlimited Projects</div>
+                    </div>
+                </div>
+                <div class="notes">These aren't just numbers. They represent real time saved, real work accomplished.</div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Pricing -->
+        <div class="slide slide-pricing">
+            <div class="slide-content">
+                <h2>Simple Pricing</h2>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>Pro</h3>
+                        <div class="price">$29</div>
+                        <p style="color: var(--text-muted);">per month</p>
+                        <ul>
+                            <li>10 projects</li>
+                            <li>50GB storage</li>
+                            <li>Cloud rendering</li>
+                            <li>Email support</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-card" style="background: var(--primary); color: white;">
+                        <h3 style="color: white;">Team</h3>
+                        <div class="price" style="color: white;">$99</div>
+                        <p style="color: rgba(255,255,255,0.7);">per month</p>
+                        <ul style="color: white;">
+                            <li>Unlimited projects</li>
+                            <li>500GB storage</li>
+                            <li>Priority rendering</li>
+                            <li>Priority support</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>Enterprise</h3>
+                        <div class="price">Custom</div>
+                        <p style="color: var(--text-muted);">contact us</p>
+                        <ul>
+                            <li>Everything in Team</li>
+                            <li>Unlimited storage</li>
+                            <li>Dedicated support</li>
+                            <li>Custom integrations</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="notes">We've kept pricing simple and transparent. Choose the plan that fits your needs.</div>
+            </div>
+        </div>
+
+        <!-- Slide 6: CTA -->
+        <div class="slide slide-cta">
+            <div class="slide-content">
+                <h2>Available Today</h2>
+                <p style="font-size: var(--text-2xl); color: var(--text);">Start creating with ProMax Studio</p>
+                <a href="https://promax.studio" class="cta-button">Download Now</a>
+                <p style="margin-top: 60px; font-size: var(--text-lg);">promax.studio</p>
+                <div class="notes">ProMax Studio is available for download right now. Thank you.</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div id="slide-counter" aria-live="polite"></div>
+
+    <div id="controls">
+        <button class="control-btn" id="fullscreen-toggle" aria-label="Toggle fullscreen">⛶ Fullscreen</button>
+    </div>
+
+    <script>
+        const state = { currentSlide: 0, totalSlides: 0, touchStartX: 0, touchEndX: 0 };
+
+        function init() {
+            const slides = document.querySelectorAll('.slide');
+            state.totalSlides = slides.length;
+            if (state.totalSlides > 0) showSlide(0);
+            updateCounter();
+            updateProgress();
+            attachEventListeners();
+        }
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.slide');
+            if (index < 0 || index >= state.totalSlides) return;
+
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'prev');
+                if (i === index) {
+                    slide.classList.add('active');
+                    animateSlideContent(slide);
+                } else if (i < index) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            state.currentSlide = index;
+            updateCounter();
+            updateProgress();
+        }
+
+        function nextSlide() {
+            if (state.currentSlide < state.totalSlides - 1) showSlide(state.currentSlide + 1);
+        }
+
+        function prevSlide() {
+            if (state.currentSlide > 0) showSlide(state.currentSlide - 1);
+        }
+
+        function animateSlideContent(slide) {
+            const elements = slide.querySelectorAll('h1, h2, h3, p, .hero-number, .feature-item, .stat-item, .pricing-card');
+            elements.forEach((el, i) => {
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    if (el.classList.contains('hero-number')) {
+                        el.classList.add('animate-scale');
+                    } else {
+                        el.classList.add('animate-in');
+                    }
+                    el.style.opacity = '1';
+                }, i * 100);
+            });
+        }
+
+        function updateCounter() {
+            document.getElementById('slide-counter').textContent = `${state.currentSlide + 1} / ${state.totalSlides}`;
+        }
+
+        function updateProgress() {
+            const progress = document.getElementById('progress');
+            const percentage = ((state.currentSlide + 1) / state.totalSlides) * 100;
+            progress.style.width = `${percentage}%`;
+            progress.setAttribute('aria-valuenow', percentage);
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function attachEventListeners() {
+            document.addEventListener('keydown', (e) => {
+                switch(e.key) {
+                    case 'ArrowRight':
+                    case ' ':
+                        e.preventDefault();
+                        nextSlide();
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        prevSlide();
+                        break;
+                    case 'f':
+                    case 'F':
+                        toggleFullscreen();
+                        break;
+                }
+            });
+
+            document.addEventListener('touchstart', (e) => {
+                state.touchStartX = e.changedTouches[0].screenX;
+            });
+
+            document.addEventListener('touchend', (e) => {
+                state.touchEndX = e.changedTouches[0].screenX;
+                const diff = state.touchStartX - state.touchEndX;
+                if (Math.abs(diff) > 50) {
+                    diff > 0 ? nextSlide() : prevSlide();
+                }
+            });
+
+            document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

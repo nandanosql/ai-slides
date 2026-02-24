@@ -361,7 +361,7 @@ Swipe directly on the slide area. Refresh the page if needed.
 
 ## Credits
 
-Built with Claude Code for creators who value quality, speed, and simplicity.
+Developed by [@nandanosql](https://github.com/nandanosql). Built with Claude Code for creators who value quality, speed, and simplicity.
 
 Inspired by the philosophy that beautiful presentations shouldn't require design expertise — just good content and smart AI.
 

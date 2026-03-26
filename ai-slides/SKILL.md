@@ -1,5 +1,5 @@
 ---
-name: AI Slides
+name: ai-slides
 description: Generate premium HTML slide decks with AI-powered content optimization, beautiful themes, and zero dependencies
 icon: 🎯
 version: 1.0.0
